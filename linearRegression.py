@@ -15,17 +15,24 @@ from sklearn.pipeline import Pipeline
 
 def baseline_model():
     model = Sequential()
-    model.add(Dense(13, input_dim=13, kernel_initializer='normal', activation='relu'))
-    model.add(Dense(1, kernel_initializer='normal'))
+    model.add(Dense(50, input_dim=13, activation='relu'))
+    model.add(Dense(100, activation='relu'))
+    model.add(Dense(50, activation='relu'))
+    model.add(Dense(1))
+    # model.add(Dense(13, input_dim=13, kernel_initializer='normal', activation='relu'))
+    # model.add(Dense(1, kernel_initializer='normal'))
     model.compile(loss='mean_squared_error', optimizer='adam')
     return model
 
-seed = 7
-numpy.random.seed(seed)
-# evaluate model with standardized dataset
-estimator = KerasRegressor(build_fn=baseline_model, epochs=100, batch_size=5, verbose=0)
+model = baseline_model()
 
-
-kfold = KFold(n_splits=10, random_state=seed)
-results = cross_val_score(estimator, x_train, y_train, cv=kfold)
-print("Results: %.2f (%.2f) MSE" % (results.mean(), results.std()))
+model.fit(x_train, y_train, epochs=2000, batch_size=5, validation_data=(x_test, y_test), verbose=2)
+# seed = 7
+# numpy.random.seed(seed)
+# # evaluate model with standardized dataset
+# estimator = KerasRegressor(build_fn=baseline_model, epochs=100, batch_size=5, verbose=1)
+#
+#
+# kfold = KFold(n_splits=10, random_state=seed)
+# results = cross_val_score(estimator, x_train, y_train, cv=kfold)
+# print("Results: %.2f (%.2f) MSE" % (results.mean(), results.std()))
